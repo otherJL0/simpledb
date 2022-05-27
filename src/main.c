@@ -7,12 +7,22 @@
 
 #define PROJECT_NAME "simpledb"
 
+/**
+ * InputBuffer:
+ *
+ * Wrapper to store state necessary for interacting with getline
+ */
 typedef struct {
   char *buffer;
   size_t buffer_length;
   ssize_t input_length;
 } InputBuffer;
 
+/**
+ * new_input_buffer:
+ *
+ * Constructor for InputBuffer
+ */
 InputBuffer *new_input_buffer() {
   InputBuffer *input_buffer = (InputBuffer *)malloc(sizeof(InputBuffer));
   input_buffer->buffer = NULL;
@@ -21,9 +31,19 @@ InputBuffer *new_input_buffer() {
   return input_buffer;
 }
 
+/**
+ * print_prompt:
+ *
+ * Shows prompt to user
+ */
 void print_prompt() { printf("db > "); }
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 
+/**
+ * read_input
+ *
+ * Store user input into an instance of InputBuffer
+ */
 void read_input(InputBuffer *input_buffer) {
   ssize_t bytes_read =
       getline(&(input_buffer->buffer), &(input_buffer->buffer_length), stdin);
@@ -33,10 +53,16 @@ void read_input(InputBuffer *input_buffer) {
     exit(EXIT_FAILURE);
   }
 
+  // Ignore trailing newline
   input_buffer->input_length = bytes_read - 1;
   input_buffer->buffer[bytes_read - 1] = 0;
 }
 
+/**
+ * close_input_buffer:
+ *
+ * Frees allocated memory for an instance of InputBuffer
+ */
 void close_input_buffer(InputBuffer *input_buffer) {
   free(input_buffer->buffer);
   free(input_buffer);
